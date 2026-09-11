@@ -3,8 +3,10 @@ from __future__ import annotations
 
 import logging
 
-from .tools import _base  # noqa: F401  (registers tools)
-from .tools import register_all  # noqa: F401
+from .tools import (
+    _base,  # noqa: F401  (registers tools)
+    register_all,  # noqa: F401
+)
 
 
 def main() -> None:

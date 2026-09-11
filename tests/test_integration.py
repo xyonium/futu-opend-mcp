@@ -1,4 +1,5 @@
 import pytest
+
 from futu_opend_mcp import connection
 
 

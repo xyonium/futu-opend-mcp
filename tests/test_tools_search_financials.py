@@ -1,4 +1,4 @@
-from futu_opend_mcp.tools import search, financials
+from futu_opend_mcp.tools import financials, search
 
 
 def _patch(monkeypatch, payload):

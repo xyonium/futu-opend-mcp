@@ -42,7 +42,7 @@ def test_corporate_actions_bad_action_errors(monkeypatch):
     assert r["_skill_error"] is True
 
 
-from futu_opend_mcp.tools import shareholders, short, profile
+from futu_opend_mcp.tools import profile, shareholders, short
 
 
 def _patch2(monkeypatch, capture):
@@ -73,7 +73,7 @@ def test_short_data_routes_interest(monkeypatch):
     assert cap["fn"] == "get_short_interest"
 
 
-from futu_opend_mcp.tools import options, capital, derivatives
+from futu_opend_mcp.tools import capital, derivatives, options
 
 
 def _patch3(monkeypatch, capture):
@@ -98,7 +98,7 @@ def test_option_underlying_routes_overview_multi_code(monkeypatch):
     assert cap["fn"] == "get_option_underlying_overview"
 
 
-from futu_opend_mcp.tools import plates, industrial_chains, ipo
+from futu_opend_mcp.tools import industrial_chains, ipo, plates
 
 
 def _patch4(monkeypatch, capture):
@@ -123,7 +123,7 @@ def test_industrial_plate_routes_stocks(monkeypatch):
     assert cap["fn"] == "get_industrial_plate_stock"
 
 
-from futu_opend_mcp.tools import institutions, macro, dividends
+from futu_opend_mcp.tools import dividends, institutions, macro
 
 
 def _patch5(monkeypatch, capture):

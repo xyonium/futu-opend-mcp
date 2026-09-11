@@ -1,6 +1,8 @@
 import sys
 import types
+
 import pytest
+
 from futu_opend_mcp import connection
 
 
@@ -34,7 +36,6 @@ def test_patched_check_ret_raises_on_error(monkeypatch):
     # simulate the real check_ret being restored by patch_common
     def real_check_ret(ret, data, ctx=None, action="", output_json=None):
         # mimic official: if ret != OK -> sys.exit
-        import sys
         sys.exit(1)
     fake_common.check_ret = real_check_ret
     connection.patch_common(fake_common)
