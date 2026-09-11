@@ -18,7 +18,9 @@ classifiers = [
 ]
 dependencies = [
   "futu-api>=10.5.6508",
-  "mcp>=1.0",
+  # mcp 2.x renamed mcp.server.fastmcp.FastMCP -> MCPServer; this server uses
+  # the 1.x FastMCP API throughout (same pin pattern as finance-mcp).
+  "mcp>=1.0,<2",
 ]
 
 [project.optional-dependencies]
