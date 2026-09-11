@@ -6,11 +6,14 @@ ensure_futu_api() at import time, which sys.exits if OpenD is unreachable).
 """
 from __future__ import annotations
 
+import contextlib
+import io
 import logging
 import socket
 import sys
 import threading
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 from . import config
@@ -84,17 +87,36 @@ def close_context() -> None:
 
 # ---- common.py patches -----------------------------------------------------
 
+def _import_skill_module(name: str, body: str) -> ModuleType:
+    """Execute ``body`` as a fresh module named ``name`` while swallowing any
+    stdout it produces.
+
+    Vendored common.py calls ``ensure_futu_api()`` at module top-level; its
+    ``print()`` statements would corrupt MCP stdio, so the import must be
+    wrapped in ``redirect_stdout``. Used by ``_import_and_patch_common`` and by
+    tests that need a synthetic module with noisy import-time output.
+    """
+    mod = ModuleType(name)
+    mod.__file__ = f"<injected:{name}>"
+    sys.modules[name] = mod
+    with contextlib.redirect_stdout(io.StringIO()):
+        exec(compile(body, mod.__file__, "exec"), mod.__dict__)
+    return mod
+
+
 def _import_and_patch_common(cfg: config.Config):
     """Import the vendored common.py (deferred) and install our patches."""
-    import importlib
-    # common.py lives at _skill/futuapi/scripts/common.py
+    # common.py lives at _skill/futuapi/scripts/common.py; import it through
+    # _import_skill_module so its module-level prints never touch MCP stdout.
     scripts_dir = str(
         (Path(__file__).resolve().parent
          / "_skill" / "futuapi" / "scripts")
     )
     if scripts_dir not in sys.path:
         sys.path.insert(0, scripts_dir)
-    common = importlib.import_module("common")
+    file_path = Path(scripts_dir) / "common.py"
+    body = file_path.read_text(encoding="utf-8")
+    common = _import_skill_module("common", body)
 
     # Stash the originals so _patched_check_ret can delegate for the OK case.
     common._original_check_ret = common.check_ret

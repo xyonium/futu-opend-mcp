@@ -1,3 +1,4 @@
+import sys
 import types
 import pytest
 from futu_opend_mcp import connection
@@ -39,3 +40,13 @@ def test_patched_check_ret_raises_on_error(monkeypatch):
     connection.patch_common(fake_common)
     with pytest.raises(connection.ApiError):
         fake_common.check_ret(1, "some error", None, "act")
+
+
+def test_import_skill_module_swallows_module_level_stdout():
+    """Vendored common.py runs ensure_futu_api() at import time; its bare
+    print()s would land on MCP stdio stdout and corrupt the JSONRPC stream.
+    _import_skill_module must swallow everything the module prints while
+    executing."""
+    body = "print('[WARN] import-time noise'); print('[ERROR] 无法连接 OpenD')"
+    mod = connection._import_skill_module("_testmod_print", body)
+    assert mod is not None
