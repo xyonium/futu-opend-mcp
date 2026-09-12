@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime as _dt
 from typing import Literal
 
 from .. import connection, skill_runner
@@ -11,10 +12,22 @@ _FED_ROUTES = {"target_rate": "get_fed_watch_target_rate", "dot_plot": "get_fed_
 
 @mcp.tool()
 def get_economic_calendar(market: str | None = None, date: str | None = None,
-                          max_count: int = 50) -> dict:
-    """Economic-event calendar - 经济事件日历. Optional market + date filter."""
+                          max_count: int = 50, end_date: str | None = None) -> dict:
+    """Economic-event calendar - 经济事件日历.
+
+    market: HK/US/SH/SG/JP/AU/MY/CA (None = all). date: start day 'YYYY-MM-DD'
+    (defaults to today); end_date: optional last day 'YYYY-MM-DD' for a range.
+    max_count: rows per page.
+
+    Do NOT pass start/end kwargs — the parameter is named `date`, not `start`.
+    Example: {"market": "US", "date": "2026-09-01", "end_date": "2026-12-31"}
+    """
     connection.get_context()
-    return skill_runner._run_skill_json(skill_fn("quote", "get_economic_calendar"), market, date=date, max_count=max_count)
+    begin = date or _dt.date.today().isoformat()
+    return skill_runner._run_skill_json(
+        skill_fn("quote", "get_economic_calendar"),
+        begin_date=begin, end_date=end_date, markets_str=market, count=max_count,
+    )
 
 
 @mcp.tool()

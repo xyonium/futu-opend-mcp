@@ -11,7 +11,7 @@ def get_plate_list(market: str, plate_type: str = "CONCEPT",
     SG/MY/JP. plate_type: ALL/INDUSTRY/REGION/CONCEPT.
     """
     connection.get_context()
-    return skill_runner._run_skill_json(skill_fn("quote", "get_plate_list"), market, plate_type=plate_type, keyword=keyword, count=count)
+    return skill_runner._run_skill_json(skill_fn("quote", "get_plate_list"), market, plate_type=plate_type, keyword=keyword, limit=count)
 
 
 @mcp.tool()

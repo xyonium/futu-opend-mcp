@@ -43,11 +43,16 @@ def get_revenue_breakdown(code: str, financial_type: int | None = None,
 @mcp.tool()
 def get_earnings_calendar(market: str, date: str | None = None,
                           max_count: int = 50) -> dict:
-    """Get earnings-release calendar for a market - 财报日历. market: US/HK/CN/SG/MY/JP.
+    """Get earnings-release calendar for a market - 财报日历.
+
+    market: US/HK/CN/SG/MY/JP (required). date: optional single day 'YYYY-MM-DD'
+    to list releases from that day. (The upstream API takes no row limit, so
+    max_count is accepted for signature stability but ignored.)
     """
     connection.get_context()
     return skill_runner._run_skill_json(
-        skill_fn("quote", "get_earnings_calendar"), market, date=date, max_count=max_count,
+        skill_fn("quote", "get_earnings_calendar"),
+        market_str=market, begin_date=date,
     )
 
 

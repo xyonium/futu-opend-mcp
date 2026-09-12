@@ -14,7 +14,10 @@ def get_institution_list(market: str, name: str | None = None, count: int = 20) 
     Returns institution_id usable in other institution tools.
     """
     connection.get_context()
-    return skill_runner._run_skill_json(skill_fn("quote", "get_institution_list"), market, name=name, count=count)
+    return skill_runner._run_skill_json(
+        skill_fn("quote", "get_institution_list"),
+        market_str=market, name_part=name, count=count,
+    )
 
 
 @mcp.tool()
